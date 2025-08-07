@@ -11,8 +11,11 @@ project(lvgl_package)
 # Add the subdirectory
 add_subdirectory(lvgl)
 
+include(${CMAKE_CURRENT_LIST_DIR}/lvgl/tests/FindLibDRM.cmake)
+
 # Set the include directories for lvgl subdirectory
 target_include_directories(lvgl 
     PUBLIC 
         ${PROJECT_SOURCE_DIR}
+        ${Libdrm_INCLUDE_DIRS}
 )
