@@ -11,11 +11,22 @@ project(lvgl_package)
 # Add the subdirectory
 add_subdirectory(lvgl)
 
-include(${CMAKE_CURRENT_LIST_DIR}/lvgl/tests/FindLibDRM.cmake)
-
-# Set the include directories for lvgl subdirectory
 target_include_directories(lvgl 
     PUBLIC 
         ${PROJECT_SOURCE_DIR}
-        ${Libdrm_INCLUDE_DIRS}
 )
+
+# Prevent the situation where LV_USE_LINUX_DRM is not defined.
+if(NOT DEFINED LV_USE_LINUX_DRM)
+    set(LV_USE_LINUX_DRM 0)
+endif()
+
+if(LV_USE_LINUX_DRM EQUAL 1)
+    include(${CMAKE_CURRENT_LIST_DIR}/lvgl/tests/FindLibDRM.cmake)
+
+    # Set the include directories for lvgl subdirectory
+    target_include_directories(lvgl 
+        PUBLIC 
+            ${Libdrm_INCLUDE_DIRS}
+    )
+endif()

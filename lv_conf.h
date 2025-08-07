@@ -1021,7 +1021,8 @@
 #endif
 
 /*Driver for /dev/dri/card*/
-#define LV_USE_LINUX_DRM        1
+/* LV_USE_LINUX_DRM is defined through a CMake option. */
+// #define LV_USE_LINUX_DRM        1
 
 /*Interface for TFT_eSPI*/
 #define LV_USE_TFT_ESPI         0
