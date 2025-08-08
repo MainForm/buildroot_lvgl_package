@@ -1022,7 +1022,7 @@
 
 /*Driver for /dev/dri/card*/
 /* LV_USE_LINUX_DRM is defined through a CMake option. */
-// #define LV_USE_LINUX_DRM        1
+#define LV_USE_LINUX_DRM        @ENABLE_DRM@
 
 /*Interface for TFT_eSPI*/
 #define LV_USE_TFT_ESPI         0
@@ -1031,7 +1031,7 @@
 #define LV_USE_EVDEV    0
 
 /*Driver for libinput input devices*/
-// #define LV_USE_LIBINPUT    1
+#define LV_USE_LIBINPUT         @ENABLE_LIBINPUT@
 
 #if LV_USE_LIBINPUT
     #define LV_LIBINPUT_BSD    0

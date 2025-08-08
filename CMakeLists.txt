@@ -20,46 +20,43 @@ target_include_directories(lvgl
 
 find_package(PkgConfig REQUIRED)
 
-# Prevent the situation where LV_USE_LINUX_DRM is not defined.
-if(NOT DEFINED LV_USE_LINUX_DRM)
-    set(LV_USE_LINUX_DRM 0)
-endif()
-
-if(LV_USE_LINUX_DRM EQUAL 1)
-    target_compile_definitions(lvgl PRIVATE LV_USE_LINUX_DRM=1)
+if(LVGL_GRAPHIC_DRM)
+    # Set the LV_USE_LINUX_DRM in lv_conf.h.in to 1
+    set(ENABLE_DRM 1)
     include(${CMAKE_CURRENT_LIST_DIR}/lvgl/tests/FindLibDRM.cmake)
 
     # Set the include directories for lvgl subdirectory
     target_include_directories(lvgl 
-        PRIVATE 
+        PUBLIC 
             ${Libdrm_INCLUDE_DIRS}
     )
 else()
-    target_compile_definitions(lvgl PRIVATE LV_USE_LINUX_DRM=0)
+    set(ENABLE_DRM 0)
 endif()
 
-
-# Prevent the situation where LV_USE_LINUX_DRM is not defined.
-if(NOT DEFINED LV_USE_LIBINPUT)
-    set(LV_USE_LIBINPUT 0)
-endif()
-
-if(LV_USE_LIBINPUT EQUAL 1)
-    target_compile_definitions(lvgl PRIVATE LV_USE_LIBINPUT=1)
+if(LVGL_INPUT_LIBINPUT)
+    set(ENABLE_LIBINPUT 1)
+    target_compile_definitions(lvgl PUBLIC LV_USE_LIBINPUT=1)
 
     # Find libinput using pkg-config
     pkg_check_modules(LIBINPUT REQUIRED libinput)
 
     # Set the include directories for lvgl subdirectory
     target_include_directories(lvgl 
-        PRIVATE 
+        PUBLIC 
             ${LIBINPUT_INCLUDE_DIRS}
     )
 
     target_link_libraries(lvgl
-        PRIVATE 
+        PUBLIC 
             ${LIBINPUT_LIBRARIES}
     )
 else()
-    target_compile_definitions(lvgl PRIVATE LV_USE_LIBINPUT=0)
+    set(ENABLE_LIBINPUT 0)
 endif()
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/lv_conf.h.in
+    ${CMAKE_BINARY_DIR}/lv_conf.h
+    @ONLY
+)
